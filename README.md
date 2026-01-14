@@ -20,6 +20,23 @@
 
 AI-driven autonomous development workflow.
 
+## Requirements
+
+**Local machine:**
+- Node.js (for npx)
+- [Claude Code CLI](https://docs.anthropic.com/en/docs/claude-code) (`claude`)
+- GitHub CLI (`gh`) - optional, for auto-detecting username
+
+**VM (where Ralph runs):**
+- A running VM/server (Hetzner, GCP, DigitalOcean, AWS, or your own)
+- SSH access to the VM
+- Git installed
+- Claude Code CLI with API key configured
+
+**Optional:**
+- Cloud CLI (`hcloud`, `gcloud`, `doctl`, `aws`) for VM management
+- [ntfy.sh](https://ntfy.sh) for notifications
+
 ## Installation
 
 ```bash
