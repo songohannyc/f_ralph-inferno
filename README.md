@@ -48,8 +48,9 @@ npx ralph-inferno install
 This will:
 1. Show disclaimer (VM sandbox required)
 2. Ask for your preferences (language, cloud provider, etc.)
-3. Install Ralph core files to `.ralph/`
-4. Create a `ralph` wrapper script
+3. Ask how Claude authenticates (subscription or API key)
+4. Install Ralph core files to `.ralph/`
+5. Create a `ralph` wrapper script
 
 ## Update
 
@@ -117,6 +118,8 @@ npx ralph-inferno update
 | `/ralph:deploy` | Push to GitHub, choose mode, start Ralph on VM |
 | `/ralph:review` | Open SSH tunnels, test the app |
 | `/ralph:change-request` | Document bugs, generate CR specs for fixes |
+| `/ralph:status` | Check Ralph's progress on VM |
+| `/ralph:abort` | Stop Ralph on VM |
 
 ### Deploy Modes
 
@@ -173,13 +176,20 @@ Configuration is stored in `.ralph/config.json`:
 
 ```json
 {
-  "version": "1.0.0",
+  "version": "1.0.1",
   "language": "en",
   "provider": "hcloud",
   "vm_name": "ralph-sandbox",
   "region": "fsn1",
   "github": {
     "username": "your-username"
+  },
+  "claude": {
+    "auth_method": "subscription"
+  },
+  "notifications": {
+    "ntfy_enabled": true,
+    "ntfy_topic": "ralph-notifications"
   }
 }
 ```

@@ -104,7 +104,9 @@ notify "⚠️ Needs help"
 │   ├── ralph:plan.md     # Generate specs
 │   ├── ralph:deploy.md   # Push & start VM
 │   ├── ralph:review.md   # Test via tunnel
-│   └── ralph:change-request.md  # Bug → CR specs
+│   ├── ralph:change-request.md  # Bug → CR specs
+│   ├── ralph:status.md   # Check progress
+│   └── ralph:abort.md    # Stop Ralph
 │
 └── templates/
     ├── PRD-template.md

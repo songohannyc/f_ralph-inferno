@@ -101,8 +101,9 @@ During `install`, you'll be asked:
 1. Language (en, sv, es, de, fr, zh)
 2. Cloud provider (hcloud, gcloud, doctl, aws, ssh)
 3. VM name and region
-4. GitHub username (auto-detected from `gh` CLI)
-5. ntfy.sh notifications (optional)
+4. ntfy.sh notifications (optional)
+5. GitHub username (auto-detected from `gh` CLI)
+6. Claude authentication method (subscription or API key)
 
 ## Slash Commands
 
@@ -113,3 +114,5 @@ During `install`, you'll be asked:
 | `/ralph:deploy` | Push to GitHub, start on VM |
 | `/ralph:review` | Open tunnels, test the app |
 | `/ralph:change-request` | Document bugs → CR specs |
+| `/ralph:status` | Check Ralph's progress on VM |
+| `/ralph:abort` | Stop Ralph on VM |
