@@ -22,6 +22,17 @@ const __dirname = dirname(__filename);
 const CORE_DIR = join(__dirname, '..', 'core');
 const TARGET_DIR = '.ralph';
 const CONFIG_FILE = join(TARGET_DIR, 'config.json');
+const PKG_JSON = join(__dirname, '..', 'package.json');
+
+// Get version from package.json
+function getVersion() {
+  try {
+    const pkg = fs.readJsonSync(PKG_JSON);
+    return pkg.version;
+  } catch {
+    return '1.0.0';
+  }
+}
 
 // Check if CLI tool is installed
 function checkCli(cmd) {
@@ -257,7 +268,7 @@ By continuing, you accept full responsibility for usage.
 
   // Build config
   const config = {
-    version: '1.0.0',
+    version: getVersion(),
     language: answers.language,
     provider: answers.provider,
     ...vmConfig,
