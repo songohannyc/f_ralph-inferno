@@ -1,84 +1,84 @@
 # Ralph Inferno - Backlog
 
-## Potentiella utökningar
+## Potential Extensions
 
 ---
 
 ### Runtime Discovery Loop
 
-**Problem:** Ralph kan upptäcka saker under implementation som borde påverka scope.
+**Problem:** Ralph may discover things during implementation that should affect scope.
 
-**Idé:** Graduated response baserat på impact:
+**Idea:** Graduated response based on impact:
 
-| Impact | Exempel | Åtgärd |
+| Impact | Example | Action |
 |--------|---------|--------|
-| **Liten** | Edge case, minor refactor | Expand in-place, fortsätt |
-| **Medium** | Nytt API-anrop, extra komponent | Skapa follow-up spec (`02a-discovery.md`) |
-| **Stor** | Arkitekturändring, nytt beroende | Pause & notify användaren |
+| **Small** | Edge case, minor refactor | Expand in-place, continue |
+| **Medium** | New API call, extra component | Create follow-up spec (`02a-discovery.md`) |
+| **Large** | Architecture change, new dependency | Pause & notify user |
 
-**Alltid:** Logga discoveries till `DISCOVERIES.md`
+**Always:** Log discoveries to `DISCOVERIES.md`
 
 ---
 
-### Issue-baserad dynamisk modell
+### Issue-Based Dynamic Model
 
-**Problem:** Nuvarande spec-modell är statisk - alla specs genereras i `/ralph:plan`. Ralph kan inte dynamiskt skapa nya tasks under körning.
+**Problem:** Current spec model is static - all specs generated in `/ralph:plan`. Ralph cannot dynamically create new tasks during execution.
 
-**Lösning:** Byt från `specs/` till `issues/` med dynamisk skapning.
+**Solution:** Switch from `specs/` to `issues/` with dynamic creation.
 
 ```
-PRD.md = Staketet (guardrails)
-issues/ = Dynamiskt, Ralph skapar vid behov
+PRD.md = The Fence (guardrails)
+issues/ = Dynamic, Ralph creates as needed
 ```
 
-**Regler:**
-- Ralph FÅR skapa issues som bidrar till PRD
-- Ralph FÅR INTE bygga utanför PRD utan godkännande
-- Scope changes → CR → `/ralph:review` → Godkänn/Avslå
+**Rules:**
+- Ralph MAY create issues that contribute to PRD
+- Ralph MAY NOT build outside PRD without approval
+- Scope changes → CR → `/ralph:review` → Approve/Reject
 
 ---
 
 ### Blind Validation
 
-**Problem:** När samma agent implementerar och validerar får vi confirmation bias.
+**Problem:** When the same agent implements and validates, we get confirmation bias.
 
-**Lösning:** Separat validator-agent som INTE ser implementation-context.
+**Solution:** Separate validator agent that does NOT see implementation context.
 
 ```
-Implementer Agent: Skriver kod baserat på spec
+Implementer Agent: Writes code based on spec
         ↓
-Blind Validator Agent: Granskar KOD ENDAST
+Blind Validator Agent: Reviews CODE ONLY
         ↓
-"Koden har bug på rad 45" (ärlig feedback)
+"Code has bug on line 45" (honest feedback)
 ```
 
 **Implementation:**
 ```bash
-# Efter implementation (Codex eller Claude)
+# After implementation (Codex or Claude)
 codex exec --dangerously-bypass-approvals-and-sandbox - <<'EOF'
 Review this code for bugs. You have NOT seen the spec.
 Only review the code itself.
 $(cat src/checkout.ts)
 EOF
-# Alternativt (Claude):
+# Alternative (Claude):
 # claude --dangerously-skip-permissions -p "
 #   Review this code for bugs. You have NOT seen the spec.
 #   Only review the code itself.
 #   $(cat src/checkout.ts)
 # "
 ```
-**Fördelar:**
-- Hittar fler buggar
-- Ingen "jag vet vad jag menade" bias
-- Mer som riktig code review
+**Benefits:**
+- Finds more bugs
+- No "I know what I meant" bias
+- More like real code review
 
 ---
 
-### SQLite för state
+### SQLite for State
 
-**Problem:** Checksum-filer och loggar är fragila. Svårt att query:a historik.
+**Problem:** Checksum files and logs are fragile. Hard to query history.
 
-**Lösning:** SQLite-databas för all state.
+**Solution:** SQLite database for all state.
 
 ```sql
 CREATE TABLE specs (
@@ -94,88 +94,88 @@ CREATE TABLE specs (
 );
 ```
 
-**Fördelar:**
-- Crash recovery (resume från exakt punkt)
+**Benefits:**
+- Crash recovery (resume from exact point)
 - Cost tracking per spec
-- Query historik ("vilka specs failar mest?")
+- Query history ("which specs fail most?")
 
 ---
 
 ### Complexity Classification
 
-**Problem:** Ralph kör alla specs likadant, oavsett komplexitet.
+**Problem:** Ralph runs all specs the same way, regardless of complexity.
 
-**Lösning:** Klassificera specs och anpassa approach.
+**Solution:** Classify specs and adapt approach.
 
 ```
-SIMPLE (< 100 tokens)     → Snabb, ingen validation
+SIMPLE (< 100 tokens)     → Fast, no validation
 MEDIUM (100-500 tokens)   → Standard flow
-COMPLEX (> 500 tokens)    → Extra validation, mer retries
-RISKY (ändrar auth/db)    → Blind validation + manuell review
+COMPLEX (> 500 tokens)    → Extra validation, more retries
+RISKY (modifies auth/db)  → Blind validation + manual review
 ```
 
 ---
 
 ### Domain Modules
 
-**Problem:** Ralph är optimerad för kod. Vad om man vill skapa andra saker?
+**Problem:** Ralph is optimized for code. What if you want to create other things?
 
-**Idé:** Domän-specifika moduler med anpassade workflows.
+**Idea:** Domain-specific modules with adapted workflows.
 
 ```
-/ralph:idea "haj-bok" --module book
-/ralph:idea "todo-app" --module app
+/ralph:idea "shark book" --module book
+/ralph:idea "todo app" --module app
 /ralph:idea "synthwave album" --module music
 ```
 
-| Modul | Output | "Deploy" gör | "Test" gör |
-|-------|--------|--------------|------------|
-| **app** | Kod + tester | `npm run build` | Playwright E2E |
+| Module | Output | "Deploy" does | "Test" does |
+|--------|--------|--------------|-------------|
+| **app** | Code + tests | `npm run build` | Playwright E2E |
 | **book** | Chapters (markdown) | Compile PDF/ePub | Spell-check, consistency |
 | **music** | Prompts + metadata | Suno/Udio API | Preview + quality check |
 | **video** | Script + shot list | Storyboard render | ? |
 | **course** | Lessons + quizzes | LMS export | Quiz validation |
 
-**Frågor att lösa:**
-- Vad är "spec" för en bok? (Chapter outline?)
-- Vad är "build pass" för musik? (API returnerar audio?)
-- Hur verifierar vi kvalitet på kreativt innehåll?
+**Questions to solve:**
+- What is "spec" for a book? (Chapter outline?)
+- What is "build pass" for music? (API returns audio?)
+- How do we verify quality on creative content?
 
 ---
 
 ### Design System Validation
 
-**Problem:** Inferno mode har design review men det är basic.
+**Problem:** Inferno mode has design review but it's basic.
 
-**Idé:** Integrera med design system för automatisk validering.
+**Idea:** Integrate with design system for automatic validation.
 
-- Läs design tokens från Figma/Storybook
-- Verifiera att implementation matchar
-- Screenshot diff mot design mockups
+- Read design tokens from Figma/Storybook
+- Verify implementation matches
+- Screenshot diff against design mockups
 
 ---
 
 ### Multi-VM Parallel Execution
 
-**Problem:** En VM = en spec i taget. Långsamt för stora projekt.
+**Problem:** One VM = one spec at a time. Slow for large projects.
 
-**Idé:** Spinn upp flera VMs och kör oberoende specs parallellt.
+**Idea:** Spin up multiple VMs and run independent specs in parallel.
 
 ```
 VM-1: 01-setup.md → 02-auth.md
-VM-2: 03-feature-a.md (efter setup klar)
-VM-3: 04-feature-b.md (efter setup klar)
+VM-2: 03-feature-a.md (after setup done)
+VM-3: 04-feature-b.md (after setup done)
 ```
 
-**Kräver:** Dependency graph, merge strategy, conflict resolution.
+**Requires:** Dependency graph, merge strategy, conflict resolution.
 
 ---
 
 ### Cost Budgets & Alerts
 
-**Problem:** Ralph kan bränna tokens utan kontroll.
+**Problem:** Ralph can burn tokens without control.
 
-**Idé:** Sätt budget per session/spec.
+**Idea:** Set budget per session/spec.
 
 ```json
 {
@@ -187,15 +187,15 @@ VM-3: 04-feature-b.md (efter setup klar)
 }
 ```
 
-**Vid budget hit:** Pause, notify, vänta på godkännande.
+**On budget hit:** Pause, notify, wait for approval.
 
 ---
 
 ### Git Branch Strategy
 
-**Problem:** Allt går till main/current branch.
+**Problem:** Everything goes to main/current branch.
 
-**Idé:** Feature branches per epic/CR.
+**Idea:** Feature branches per epic/CR.
 
 ```
 main
@@ -204,24 +204,24 @@ main
 └── ralph/cr-dark-mode
 ```
 
-**Auto-PR:** När epic klar → skapa PR för review.
+**Auto-PR:** When epic done → create PR for review.
 
 ---
 
-## Prioritering
+## Priority
 
-| Feature | Värde | Komplexitet | Notering |
-|---------|-------|-------------|----------|
-| Runtime discovery loop | Högt | Medel | Bygger på befintlig CR-logik |
-| Blind validation | Högt | Låg | Enkel att implementera |
-| SQLite state | Medel | Medel | Bra för debugging |
-| Complexity classification | Medel | Låg | Quick win |
-| Domain modules | Högt | Hög | Stor omskrivning |
-| Design system validation | Medel | Hög | Kräver integrationer |
-| Multi-VM parallel | Högt | Hög | Komplex orchestration |
-| Cost budgets | Medel | Låg | Quick win |
-| Git branch strategy | Medel | Medel | Nice to have |
-| Issue-baserad modell | Högt | Medel | Fundamental ändring |
+| Feature | Value | Complexity | Notes |
+|---------|-------|------------|-------|
+| Runtime discovery loop | High | Medium | Builds on existing CR logic |
+| Blind validation | High | Low | Easy to implement |
+| SQLite state | Medium | Medium | Good for debugging |
+| Complexity classification | Medium | Low | Quick win |
+| Domain modules | High | High | Major rewrite |
+| Design system validation | Medium | High | Requires integrations |
+| Multi-VM parallel | High | High | Complex orchestration |
+| Cost budgets | Medium | Low | Quick win |
+| Git branch strategy | Medium | Medium | Nice to have |
+| Issue-based model | High | Medium | Fundamental change |
 
 ---
 
@@ -233,4 +233,4 @@ main
 
 ---
 
-*Senast uppdaterad: 2026-01-19*
+*Last updated: 2026-01-19*
