@@ -417,7 +417,10 @@ exec "$RALPH_DIR/scripts/ralph.sh" "$@"
 `));
 
   console.log(chalk.cyan('Next steps:'));
-  console.log(chalk.dim('  1. Run /ralph:discover (Claude Code) or /prompts:ralph-discover (Codex CLI)'));
-  console.log(chalk.dim('  2. Or run: ./ralph --help'));
+  console.log(chalk.dim('  1. Start Claude Code: claude'));
+  console.log(chalk.dim('  2. Run /ralph:idea "your app idea"'));
+  console.log(chalk.dim('  3. Then: /ralph:discover → /ralph:plan → /ralph:preflight → /ralph:deploy'));
+  console.log('');
+  console.log(chalk.dim('Or with Codex CLI: codex then use /prompts:ralph-*'));
   console.log('');
 }
