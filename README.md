@@ -1,5 +1,7 @@
 # 🔥 Ralph Inferno
 
+> **⚠️ DEPRECATED:** This project is no longer actively developed. Core functionality has been migrated to [Symbiont](https://github.com/sandstream/symbiont), an evolutionary agent ecosystem. Use Symbiont for new projects.
+
 ```
 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
 🔥                                              🔥
