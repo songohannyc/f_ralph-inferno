@@ -1,5 +1,7 @@
 # 🔥 Ralph Inferno
 
+> **⚠️ DEPRECATED:** This project has been superseded by [Symbiont](/home/ralph/symbiont). Development has moved there as of February 2026.
+
 ```
 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
 🔥                                              🔥
